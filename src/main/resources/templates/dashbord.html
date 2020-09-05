@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insert title here</title>
+</head>
+<body>
+<hr>
+<h1>Dashboard</h1>
+<a th:href="@{/logout}">Logout</a>
+<hr>
+<a th:href="@{/postcontent}">Post</a>
+
+<div th:each="post:${posts}">
+<hr>
+<h1 th:text="${post.title}"></h1>
+<h3 th:text="${post.content}"></h3>
+<h4 th:text="${post.d}"></h4>
+<hr>
+</div>
+
+</body>
+</html>

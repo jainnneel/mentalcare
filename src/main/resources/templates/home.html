@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link  type="text/css"  href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"></link>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<style  type="text/css">
+.hide {
+	display: none;
+}
+</style>
+
+</head>
+<body>
+	<div th:text="${home}"></div>
+	<hr>
+	<button th:id="postcontent">Share Your Feeling</button>
+	<hr>
+<div th:id="postform" class="hide">
+	<form  th:object="${post}" method="POST">
+		<table>
+			<tr>
+				<td>Title*</td>
+				<td><input type="text" th:field="*{title}" id="title" />
+				 <!-- <label
+					th:if="${#fields.hasErrors('title')}" th:class="'error'"
+					th:errors="*{title}">Enter User Name</label> -->
+					<label class="title"></label>
+					</td>
+			</tr>
+
+			<tr>
+				<td>Content*</td>
+				<td><textarea th:field="*{content}" id="content"></textarea> <!-- <label
+					th:if="${#fields.hasErrors('content')}" th:class="'error'"
+					th:errors="*{content}"></label> -->
+					<label class="content"></label></td>
+			</tr>
+
+
+			<tr>
+				<td colspan="2"><input type="submit" th:value="Post" />
+			</tr>
+		</table>
+	</form>
+		<hr>
+</div>	
+<div sec:authorize="isAuthenticated()">
+	<a th:href="@{/userpost}" >Your
+		Post</a>
+		<hr>
+	<a th:href="@{/response}" >Your
+		Responses</a>
+</div>		
+	<div sec:authorize="!isAuthenticated()">
+		<a th:href="@{/register}">Get Started</a>
+	<hr>
+	</div>
+	
+	<div sec:authorize="!isAuthenticated()">
+		<a th:href="@{/login}">Login</a>
+	</div>
+	<div sec:authorize="isAuthenticated()">
+	<hr>
+		<a th:href="@{/logout}">Logout</a>
+	</div>
+
+	<div th:each="post:${posts}">
+		<hr>
+		<a th:href="@{'/post/'+${post.id}}" th:text="${post.title}"></a>
+		<h3 th:text="${post.content}"></h3>
+		<h4 th:text="${post.d}"></h4>
+		<hr>
+	</div>
+	
+	<script src="/dashboard.js"></script>
+</body>
+</html>

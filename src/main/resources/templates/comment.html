@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insert title here</title>
+</head>
+<body>
+<div style="margin: 20px" th:each="cmnt : ${comments}" id="parent1">
+		<div th:if="${cmnt.comment == null}" >
+		 <span  th:text="${cmnt.review}"></span>
+		
+		<button th:if="${cmnt.user.id == user.id}"  th:onclick="|deleteComment('${cmnt.id}_${post.id}')|">Delete</button>
+		<button th:id="|replyBtn-${cmnt.id}|">reply</button>
+		</div>
+		
+		<form th:id="|replyForm-${cmnt.id}|" class="hide replyform"
+			th:object="${comment}"
+			method="POST">
+			 <input type="hidden" th:value="${post.id}" th:id="|pid-${cmnt.id}|">
+			<input type="hidden" th:value="${cmnt.id}" th:id="|cid-${cmnt.id}|"> 
+			
+			<textarea th:field="*{review}" th:id="|replyreview-${cmnt.id}|"></textarea>
+			<label th:if="${#fields.hasErrors('review')}" th:class="'error'"
+				th:errors="*{review}"></label>
+			<button type="submit" th:id="|Submitreply-${cmnt.id}|">comment</button>
+		</form>
+
+		<div th:each="commentLevel1 : ${cmnt.comments}"
+			style="margin-left: 1em;">
+			<div>
+			<span th:text="${commentLevel1.review}"></span>
+					<button th:if="${commentLevel1.user.id == user.id}"  th:onclick="|deleteComment('${commentLevel1.id}_${post.id}')|">Delete</button>
+			<!--<a th:if="${commentLevel1.user.id == user.id}" th:href="@{'deleteComment/'+${commentLevel1.id}+'/'+${post.id}}">Delete</a>-->		
+			</div>
+		</div>
+	</div> 
+	
+	
+</body>
+</html>

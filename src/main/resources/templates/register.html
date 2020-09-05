@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<title>Insert title here</title>
+</head>
+<body>
+
+	<h3 th:if="${exists}">User already Exists</h3>
+	<h1>Register</h1>
+	<hr>
+	<form action="#" th:action="@{/register}" th:object="${user}"
+		method="POST">
+		<table>
+
+			<tr>
+				<td>Email</td>
+				<td>
+				<div id="message"></div>
+				<input type="text" th:field="*{email}" onblur="checkuser()"
+					id="email" /> <label th:if="${#fields.hasErrors('email')}"
+					th:class="'error'" th:errors="*{email}">Enter User Name</label></td>
+				
+			</tr>
+
+			<tr>
+				<td>Password</td>
+				<td><input type="password" th:field="*{pass}" id="val" /> <label
+					th:if="${#fields.hasErrors('pass')}" th:class="'error'"
+					th:errors="*{pass}"></label></td>
+			</tr>
+			<tr>
+				<td>DOB</td>
+				<td><input type="date" th:field="*{date}" /> <label
+					th:if="${#fields.hasErrors('date')}" th:class="'error'"
+					th:errors="*{date}"></label></td>
+			</tr>
+
+			<tr>
+				<td colspan="2"><input type="submit" th:value="Register" /> <input
+					type="reset" th:value="Reset" /></td>
+			</tr>
+		</table>
+	</form>
+	<a th:href="@{/login}">Login</a>
+	<script type="text/javascript">
+		
+         const checkuser = () => {
+        	 var email = $('#email').val();
+     		$.ajax({
+     			type : "POST",
+     			contentType : "application/json",
+     			url :  "checkemail",
+     			data : JSON.stringify(email),
+     			dataType : 'json',
+     			success : function(data) {
+     				if(data.status=="nottt"){
+     					$("#message").html("already exist");
+     				}else{
+     					$("#message").html("");
+     				}
+     			}
+     		});
+         }
+		
+	</script>
+</body>
+</html>

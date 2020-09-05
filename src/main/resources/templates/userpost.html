@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style type="text/css">
+.hide {
+	display: none;
+}
+</style>
+</head>
+<body>
+	<h1>User Post</h1>
+	<hr>
+	<a th:href="@{/}">Dashboard</a>
+	<hr>
+	<div th:each="post:${posts}">
+		<h3 th:text="${post.title}"></h3>
+		<h3 th:text="${post.content}"></h3>
+		<h4 th:text="${post.d}"></h4>
+		<a th:text="Edit" th:href="@{'/post/'+${post.id}}"></a><br>
+		 <button th:onclick="|deletePost('${post.id}')|">Delete Post</button> 
+		<hr>
+		
+		<button th:id="|show-${post.id}|"
+			th:onclick="|showcommment('${post.id}')|">Show Comment</button>
+		
+		<div  class="commnentshow hide" th:id="|div-${post.id}|" >
+		
+		<h3>Post comment</h3>
+		
+		<form th:object="${comment}" method="POST" th:id="|commentForm-${post.id}|">
+			<!-- <input type="hidden" th:value="${post.id}" th:id="|postId-${post.id}|" > -->
+			<textarea th:field="*{review}" th:id="|cmtreview-${post.id}|"></textarea>
+			<label th:if="${#fields.hasErrors('review')}" th:class="'error'"
+				th:errors="*{review}"></label>
+			<button type="submit">comment</button>
+		</form>
+		<div th:id="|comment-${post.id}|"></div>
+		</div>	
+		
+		<hr>
+	</div>
+	<script type="text/javascript" src="/userpost.js"></script>
+</body>
+</html>
