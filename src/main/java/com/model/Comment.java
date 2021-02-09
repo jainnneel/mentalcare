@@ -1,7 +1,6 @@
 package com.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,10 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.lang.Nullable;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.sun.istack.Nullable;
 
 @Entity
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
@@ -24,8 +24,7 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	
+
 	private String review;
 	
 	@ManyToOne
@@ -36,7 +35,7 @@ public class Comment {
 	@JsonIgnore
 	private Post post;
 	
-	@OneToMany(mappedBy = "comment")
+	@OneToMany(mappedBy = "parentComment")
 	@Nullable
 	private List<Comment> comments = new ArrayList<>();
 	
@@ -44,25 +43,20 @@ public class Comment {
 	@JoinColumn(name="comment_id", nullable=true)
 	@JsonIgnore
 	@Nullable
-	private Comment comment;
-	
-	
-//	private Date d;
+	private Comment parentComment;
 	
 	public Comment() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Comment(int id, String text, Users user, Post post, List<Comment> comments, Comment comment, Date date) {
+	public Comment(int id, String text, Users user, Post post, List<Comment> comments, Comment comment) {
 		super();
 		this.id = id;
 		this.review = text;
 		this.user = user;
 		this.post = post;
 		this.comments = comments;
-		this.comment = comment;
-//		this.d = date;
+		this.parentComment = comment;
 	}
 
 	public int getId() {
@@ -106,27 +100,11 @@ public class Comment {
 	}
 
 	public Comment getComment() {
-		return comment;
+		return parentComment;
 	}
 
 	public void setComment(Comment comment) {
-		this.comment = comment;
+		this.parentComment = comment;
 	}
 
-	/*
-	 * @Override public String toString() { return "Comment [id=" + id + ", review="
-	 * + review + ", user=" + user + ", post=" + post + ", comments=" + comments +
-	 * ", comment=" + comment + "]"; }
-	 */
-
-//	public Date getD() {
-//		return d;
-//	}
-//
-//	public void setD(Date date) {
-//		this.d = date;
-//	}
-
-	
-	
 }

@@ -29,21 +29,20 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dao.EmailSender;
 import com.dao.TokenImpl;
 import com.dao.UserImpl;
+import com.dto.UserDto;
 import com.model.Response;
 import com.model.Token;
 import com.model.Users;
-
 
 /**
  * this class is register controller handling the endPoins of register related
@@ -68,13 +67,15 @@ public class RegController {
 	@Autowired
 	EmailSender emailSenderService;
 
-	@RequestMapping("register")
-	public String register(Model model) {
-		model.addAttribute("user", new Users());
-		return "register";
-	}
+	String register = "register";
 	
-	@RequestMapping(value="checkemail",method = RequestMethod.POST,consumes = MediaType.ALL_VALUE )
+	@GetMapping("register")
+	public String register(Model model) {
+		model.addAttribute("user", new UserDto());
+		return register;
+	}
+
+	@PostMapping(value="checkemail",consumes = MediaType.ALL_VALUE )
 	@ResponseBody
     public Response checkemail(@RequestBody Object email ) {
 	    Users Optionaluser = userImpl.getbyEmail(email.toString());
@@ -88,18 +89,18 @@ public class RegController {
     }
 
 	@PostMapping("/register")
-	public String userReg(@Valid @ModelAttribute("user") Users user, BindingResult result, Model m,
+	public String userReg(@Valid @ModelAttribute("user") UserDto user, BindingResult result, Model m,
 			HttpServletRequest request) {
 
 		Users Optionaluser = userImpl.getbyEmail(user.getEmail());
 
-		if (Optionaluser != null) {
+		if (Optionaluser != null) { 
 			m.addAttribute("exists", "This email already exists!");
-			return "register";
+			return register;
 		} else {
 			if (result.hasErrors()) {
 				m.addAttribute("user", user);
-				return "register";
+				return register;
 			}
 			Users usercreated = userImpl.createUser(user);
 
@@ -111,7 +112,7 @@ public class RegController {
 			mailMessage.setSubject("Email verification");
 			mailMessage.setFrom("blankteam9933@gmail.com");
 			mailMessage.setText("click on the link for verification:=>" + url
-					+ ":8080/mentalcare/confirm-account?token=" + t.getToken());
+					+ ":8080/mentalcare/confirm-account?token=" + t.getEmailToken());
 			emailSenderService.sendEmail(mailMessage);
 			m.addAttribute("message", "check your mail for futher process");
 			m.addAttribute("email", user.getEmail());
@@ -120,13 +121,13 @@ public class RegController {
 		}
 	}
 
-	@RequestMapping(value = "confirm-account", method = { RequestMethod.GET, RequestMethod.POST })
+	@GetMapping(value = "confirm-account")
 	public String conform(@RequestParam("token") String confirmationToken, Model model) {
 		Token t = ts.findToken(confirmationToken);
 		if (t != null) {
             Users u = userImpl.getbyEmail(t.getU().getEmail());
 			u.setEnable(true);
-			userImpl.createUser(u);
+			userImpl.createUserSave(u);
 			model.addAttribute("message2", "User successfully verified");
 			return "User-Verified";
 		} else {
@@ -135,7 +136,7 @@ public class RegController {
 		}
 	}
 
-	@RequestMapping("login")
+	@GetMapping("login")
 	public String login(Principal principal) {
 		if (principal == null) {
 			return "login";

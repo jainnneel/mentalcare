@@ -1,7 +1,7 @@
 package com.model;
 
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class Token {
@@ -19,9 +17,8 @@ public class Token {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private String token;
+	private String emailToken;
 	
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date doc;
 	
 	@OneToOne
@@ -29,14 +26,13 @@ public class Token {
 	
 	public Token() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Token(Users u) {
 		super();
 		this.u = u;
-		this.token = UUID.randomUUID().toString();
-		this.doc = new Date();
+		this.emailToken = UUID.randomUUID().toString();
+		this.doc = new Date(new java.util.Date().getTime());
 	}
 
 	public int getId() {
@@ -47,15 +43,15 @@ public class Token {
 		this.id = id;
 	}
 
-	public String getToken() {
-		return token;
-	}
+	public String getEmailToken() {
+        return emailToken;
+    }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public void setEmailToken(String emailToken) {
+        this.emailToken = emailToken;
+    }
 
-	public Date getDoc() {
+    public Date getDoc() {
 		return doc;
 	}
 

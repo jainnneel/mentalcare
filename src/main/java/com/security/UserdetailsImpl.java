@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.model.Users;
 
-import net.bytebuddy.agent.builder.AgentBuilder.Identified.Extendable;
-
 public class UserdetailsImpl implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,9 +30,6 @@ public class UserdetailsImpl implements UserDetails, Serializable {
             GrantedAuthority g = new SimpleGrantedAuthority("ROLE_" + r);
             a.add(g);
         });
-
-        System.out.println(a);
-
         return a;
     }
 
@@ -60,13 +55,11 @@ public class UserdetailsImpl implements UserDetails, Serializable {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
         return u.isEnable();
   }
 

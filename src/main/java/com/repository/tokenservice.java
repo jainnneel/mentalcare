@@ -7,5 +7,5 @@ import com.model.Token;
 
 @Repository
 public interface tokenservice extends JpaRepository<Token,Integer> {
-	Token findBytoken(String t);
+	Token findByemailToken(String t);
 }

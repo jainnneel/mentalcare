@@ -19,11 +19,13 @@ package com.dao;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.exceptionHandle.ExceptionOccured;
 import com.model.Comment;
 import com.model.Post;
 import com.repository.commentrepo;
@@ -48,7 +50,7 @@ public class CommentDao {
 		try {
 			return commentrepo.save(c);
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 
 	}
@@ -57,16 +59,21 @@ public class CommentDao {
 		try {
 			return commentrepo.findByPost(p);
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 
 	}
 
 	public Comment getcommentById(int cid) {
 		try {
-			return commentrepo.findById(cid).get();
+		    Optional<Comment> findById = commentrepo.findById(cid);
+            if (findById.isPresent()) {
+		        return findById.get();
+            }else {
+                return null;
+            }
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 
 	}
@@ -75,7 +82,7 @@ public class CommentDao {
 		try {
 			commentrepo.deleteById(cid);
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 
 	}
@@ -83,15 +90,16 @@ public class CommentDao {
 	public Set<Post> findCommentByuser(int u) {
 		try {
 			List<Integer> postid = commentrepo.findByuser(u);
-			System.out.println(postid);
 			Set<Post> post = new HashSet<Post>();
 			for (int i : postid) {
-				System.out.println("index=>" + i);
-				post.add(postrepo.findById(i).get());
+				Optional<Post> findById = postrepo.findById(i);
+				if (findById.isPresent()) {
+				    post.add(findById.get());
+                }
 			}
 			return post;
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 	}
 }

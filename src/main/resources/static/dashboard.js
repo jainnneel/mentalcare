@@ -18,7 +18,7 @@ $( document ).ready(function() {
 	    
 	    
 	    function ajaxPost(){
-	 
+	 	console.log("Dsadsadsadas")
 	      var formData = {
 	        title : $("#title").val(),
 	        content :  $("#content").val()

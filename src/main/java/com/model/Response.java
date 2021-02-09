@@ -8,7 +8,6 @@ public class Response {
 	private Map<String, String> errorMessages;
 	public Response() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Response(String status, Map<String, String> errorMessages) {
 		super();

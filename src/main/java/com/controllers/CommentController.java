@@ -14,16 +14,17 @@
 package com.controllers;
 
 import java.security.Principal;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dao.CommentDao;
@@ -54,57 +55,70 @@ public class CommentController {
 	@Autowired
 	CommentDao commentImpl;
 
-	@RequestMapping(value = "post/{pid}/comment", consumes = { MediaType.ALL_VALUE }, method = RequestMethod.POST)
+	@PostMapping(value = "post/{pid}/comment", consumes = { MediaType.ALL_VALUE })
 	@ResponseBody
 	public Response postcomment(@RequestBody String com, BindingResult result, @PathVariable("pid") int pid,
 			Principal principal, Model m) {
 		Response r = new Response();
-		Post p = postImpl.getbyid(pid).get();
-		Users u = userImpl.getbyEmail(principal.getName());
-		Comment c = new Comment();
-		c.setReview(com.split("=")[1]);
-		c.setUser(u);
-		c.setPost(p);
-		// c.setD(new Date());
-		commentImpl.createComment(c);
-		r.setStatus("done");
-		return r;
+		Optional<Post> getbyid = postImpl.getbyid(pid);
+		if (getbyid.isPresent()) {
+		    Post p = getbyid.get();
+	        Users u = userImpl.getbyEmail(principal.getName());
+	        Comment c = new Comment();
+	        c.setReview(com.split("=")[1]);
+	        c.setUser(u);
+	        c.setPost(p);
+	        commentImpl.createComment(c);
+	        r.setStatus("done");
+	        return r;
+        }else {
+            return r;
+        }
+        
 	}
 
-	@RequestMapping(value = "post/{pid}/{cid}/comment", consumes = { MediaType.ALL_VALUE }, method = RequestMethod.POST)
+	@PostMapping(value = "post/{pid}/{cid}/comment", consumes = { MediaType.ALL_VALUE })
 	@ResponseBody
 	public Response replycomment(@RequestBody String review, @PathVariable("pid") int pid, @PathVariable("cid") int cid,
 			Principal principal) {
 		Response r = new Response();
-		Post p = postImpl.getbyid(pid).get();
+		Optional<Post> getbyid = postImpl.getbyid(pid);
+        if (getbyid.isPresent()) {
 		Users u = userImpl.getbyEmail(principal.getName());
 		Comment pcmnt = commentImpl.getcommentById(cid);
 		Comment c = new Comment();
 		c.setReview(review.split("=")[1]);
-		c.setPost(p);
+		c.setPost(getbyid.get());
 		c.setComment(pcmnt);
 		c.setUser(u);
 		commentImpl.createComment(c);
 		r.setStatus("done");
-		return r;
+	     return r;
+        }else {
+            return r;
+        }
 	}
 
-	@RequestMapping("post/deleteComment/{cid}/{pid}")
+	@GetMapping("post/deleteComment/{cid}/{pid}")
 	@ResponseBody
 	public String deletecomment(@PathVariable int cid, @PathVariable int pid) {
 		commentImpl.deletecomment(cid);
 		return "done";
 	}
 
-	@RequestMapping("post/getallcomment/{pid}")
+	@GetMapping("post/getallcomment/{pid}")
 	public String allcomment(@PathVariable int pid, Model m, Principal principal) {
 		Users u = userImpl.getbyEmail(principal.getName());
-		Post p = postImpl.getbyid(pid).get();
+		Optional<Post> getbyid = postImpl.getbyid(pid);
+        if (getbyid.isPresent()) {
 		m.addAttribute("user", u);
-		m.addAttribute("post", p);
-		m.addAttribute("comments", p.getComment());
+		m.addAttribute("post", getbyid.get());
+		m.addAttribute("comments", getbyid.get().getComment());
 		m.addAttribute("comment", new Comment());
 		return "comment";
+        }else {
+            return "not present";
+        }
 	}
 
 }

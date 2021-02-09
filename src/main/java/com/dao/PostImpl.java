@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.exceptionHandle.ExceptionOccured;
 import com.model.Post;
 import com.model.Users;
 import com.repository.postrepo;
@@ -21,7 +22,7 @@ public class PostImpl {
 		try {
 			return p.findById(id);
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 		
 	}
@@ -30,7 +31,7 @@ public class PostImpl {
 		try {
 			return p.save(post);
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 		
 	}
@@ -39,7 +40,7 @@ public class PostImpl {
 		try {
 			p.deleteById(id);
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		} 
 		
 	}
@@ -48,7 +49,7 @@ public class PostImpl {
 		try {
 			return p.findAll(Sort.by(Sort.Direction.DESC,"id"));
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 		
 	}
@@ -57,7 +58,7 @@ public class PostImpl {
 		try {
 			return p.findByUserOrderByDDesc(u);
 		} catch (Exception r) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 		
 	}

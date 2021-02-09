@@ -39,7 +39,6 @@ public class Users {
 
 	public Users() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getId() {
@@ -90,19 +89,13 @@ public class Users {
 		this.isEnable = isEnable;
 	}
 
-	public Users(int id, @NotEmpty @Size(min = 3, max = 20, message = "Email must be between 3 to 12") String email,
-			@NotEmpty @Size(min = 3, max = 20, message = "Password must be between 3 to 12") String pass, Date date,
-			String role, boolean isEnable) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.pass = pass;
-		this.date = date;
-		this.role = role;
-		this.isEnable = isEnable;
-	}
+	public Users(String email2, String pass2) {
+	    this.email = email2;
+        this.pass = pass2;
+        this.date = new Date(new java.util.Date().getTime()) ;
+    }
 
-	@Override
+    @Override
 	public String toString() {
 		return "Users [id=" + id + ", email=" + email + ", pass=" + pass + ", date=" + date + ", role=" + role
 				+ ", isEnable=" + isEnable + "]";

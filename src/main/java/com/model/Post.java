@@ -1,7 +1,7 @@
 package com.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -41,7 +41,6 @@ public class Post {
 	
 	public Post() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Post(int id, @NotEmpty String title,

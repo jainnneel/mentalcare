@@ -1,21 +1,3 @@
-/*
- * Copyright 2020 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * @author neeljain
- */
-
-
 package com.controllers;
 
 import java.security.Principal;
@@ -26,13 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.dao.CommentDao;
 import com.dao.EmailSender;
 import com.dao.PostImpl;
 import com.dao.UserImpl;
-import com.model.Comment;
+import com.dto.CommentDto;
+import com.dto.PostDto;
 import com.model.Post;
 import com.model.Users;
 
@@ -56,47 +39,47 @@ public class DashbordController implements ErrorController {
 	
 	@Autowired
 	EmailSender emailSenderService;
-
-	@RequestMapping("/")
+	
+	String value = "posts";
+	
+	@GetMapping("/")
 	public String home(Model model) {
 		List<Post> allpost = postImpl.findAllPost();
 		model.addAttribute("posts", allpost);
 		model.addAttribute("home", "homepage");
-		model.addAttribute("post", new Post());
+		model.addAttribute("post", new PostDto());
 		return "home";
 	}
 
-	@RequestMapping("userpost")
+	@GetMapping("userpost")
 	public String userpost(Model m, Principal principal) {
 		Users u = userImpl.getbyEmail(principal.getName());
 		List<Post> allpost = postImpl.findPostByuser(u);
-		m.addAttribute("posts", allpost);
+		m.addAttribute(value, allpost);
 		m.addAttribute("user", u);
-		m.addAttribute("comment", new Comment());
+		m.addAttribute("comment", new CommentDto());
 		return "userpost";
 	}
 	
-	@RequestMapping("response")
+	@GetMapping("response")
 	public String response(Model m, Principal principal) {
 		Users u = userImpl.getbyEmail(principal.getName());
 		Set<Post> commentedpost = commentImpl.findCommentByuser(u.getId());
-		m.addAttribute("posts", commentedpost);
+		m.addAttribute(value, commentedpost);
 		m.addAttribute("user", u);
-		m.addAttribute("comment", new Comment());
+		m.addAttribute("comment", new CommentDto());
 		return "usercommentedpost";
 	}
 
 	
-	private static final String PATH = "/error";
-
-	@RequestMapping(value = PATH)
+	@GetMapping(value = "/error")
 	public String error() {
 		return "errorpage";
 	}
 
 	@Override
 	public String getErrorPath() {
-		return PATH;
+		return "/error";
 	}
 
 }

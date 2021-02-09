@@ -1,4 +1,4 @@
-let deleteComment;
+	let deleteComment;
 	let postcomment;
 	let replyForm;	    
 	$(document).ready(function() {

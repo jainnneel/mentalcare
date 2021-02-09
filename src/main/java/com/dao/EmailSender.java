@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.exceptionHandle.ExceptionOccured;
+
 @Service("emailSenderService")
 public class EmailSender {
 	
@@ -21,7 +23,7 @@ public class EmailSender {
 		try {
 			  javaMailSender.send(email);
 		} catch (Exception e) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 		
 	  }

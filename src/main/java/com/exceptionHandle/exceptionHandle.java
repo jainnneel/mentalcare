@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class exceptionHandle {
 	
-	@ExceptionHandler(value = RuntimeException.class)
-	public String runtime(RuntimeException e,Model m) {
-		System.out.println(e.getMessage());
+	@ExceptionHandler(value = ExceptionOccured.class)
+	public String runtime(ExceptionOccured e,Model m) {
 		m.addAttribute("message",e.getMessage());
 		return "errorpage";
 	}

@@ -23,10 +23,9 @@ public class UserServices implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
-
-		UserdetailsImpl userdetails = new UserdetailsImpl(user);
-
-		return userdetails;
+		System.out.println(user.getEmail());
+		UserdetailsImpl userdetailsImpl = new UserdetailsImpl(user);
+        return userdetailsImpl;
 	}
 
 }

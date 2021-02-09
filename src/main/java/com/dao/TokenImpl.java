@@ -3,6 +3,7 @@ package com.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.exceptionHandle.ExceptionOccured;
 import com.model.Token;
 import com.repository.tokenservice;
 
@@ -16,15 +17,15 @@ public class TokenImpl{
 	try {
 		ts.save(t);
 	} catch (Exception e) {
-		throw new RuntimeException();
+		throw new ExceptionOccured();
 	}
 	}
 	
 	public Token findToken(String t) {
 		try {
-			return ts.findBytoken(t);
+			return ts.findByemailToken(t);
 		} catch (Exception e) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 		
 	}
@@ -33,7 +34,7 @@ public class TokenImpl{
 		try {
 			ts.delete(t);
 		} catch (Exception e) {
-			throw new RuntimeException();
+			throw new ExceptionOccured();
 		}
 		
 	}
